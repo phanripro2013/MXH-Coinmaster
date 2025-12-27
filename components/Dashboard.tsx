@@ -11,7 +11,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
   const menuItems = [
     { id: AppView.SPIN_LINKS, label: 'Spin Links', icon: <ICONS.Spin className="w-8 h-8" />, color: 'bg-blue-600', desc: 'Auto Update' },
     { id: AppView.COIN_LINKS, label: 'Coin Links', icon: <ICONS.Coin className="w-8 h-8" />, color: 'bg-yellow-500', desc: 'Auto Update' },
-    { id: AppView.EVENT_COUNTER, label: 'Đếm sự kiện', icon: <ICONS.Event className="w-8 h-8" />, color: 'bg-purple-600', desc: 'Manual Tracker' },
+    { id: AppView.EVENT_COUNTER, label: 'Bộ đếm Sym', icon: <ICONS.Event className="w-8 h-8" />, color: 'bg-purple-600', desc: 'Tool Chuyên Nghiệp' },
     { id: AppView.HISTORY, label: 'Thống kê quay', icon: <ICONS.History className="w-8 h-8" />, color: 'bg-orange-500', desc: 'Saved Sessions' },
     { id: AppView.CONTACT, label: 'Zalo Admin', icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>, color: 'bg-emerald-500', desc: 'Support 24/7' },
   ];
@@ -28,14 +28,14 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
             </span>
             <span className="text-xs font-black uppercase tracking-widest text-blue-100">Hệ thống đang hoạt động</span>
           </div>
-          <h2 className="text-3xl font-black mb-1 leading-tight tracking-tighter">VŨ•rCOINMASTER</h2>
+          <h2 className="text-3xl font-black mb-1 leading-tight tracking-tighter">VŨ•SYMCOINMASTER</h2>
           <p className="text-blue-100/80 font-medium text-sm">Tự động cập nhật link từ Game mỗi 30 phút.</p>
         </div>
         
         {/* Decorative elements */}
         <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
         <div className="absolute top-0 right-0 p-6 opacity-20">
-          <ICONS.Spin className="w-24 h-24 rotate-12" />
+          <ICONS.Event className="w-24 h-24 rotate-12" />
         </div>
       </div>
 
@@ -54,8 +54,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
                 <h3 className="font-black text-lg text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors uppercase tracking-tight">{item.label}</h3>
                 <div className="flex items-center gap-1.5">
                    <p className="text-xs text-gray-400 dark:text-gray-500 font-bold">{item.desc}</p>
-                   {item.desc === 'Auto Update' && (
-                     <span className="text-[10px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded-md uppercase font-black">Live</span>
+                   {(item.desc === 'Auto Update' || item.id === AppView.EVENT_COUNTER) && (
+                     <span className="text-[10px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded-md uppercase font-black">PRO</span>
                    )}
                 </div>
               </div>
