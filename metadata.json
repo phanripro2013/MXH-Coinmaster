@@ -1,0 +1,7 @@
+{
+  "name": "『Spin』Vũ•rCoinmaster - System Showcase",
+  "description": "A comprehensive web-based implementation and developer dashboard for the 『Spin』Vũ•rCoinmaster Android app and PHP backend system, featuring an event counter, link lists, and full source code documentation.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
