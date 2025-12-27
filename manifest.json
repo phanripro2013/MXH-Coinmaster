@@ -1,0 +1,24 @@
+
+{
+  "name": "『Spin』Vũ•SymCoinMaster",
+  "short_name": "Vũ Sym",
+  "description": "Hệ thống hỗ trợ Coin Master chuyên nghiệp bởi Mr Vũ",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2489/2489756.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2489/2489756.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
