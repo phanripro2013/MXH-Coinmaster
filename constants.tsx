@@ -7,38 +7,36 @@ export const CONTACT_INFO = {
   email: "tonyhoaivu@gmail.com",
 };
 
-export const MOCK_SPIN_LINKS = [
-  { id: 1, title: "25 Spins - Daily Reward", url: "https://static.coinmaster.com/reward1", date: "2024-05-20" },
-  { id: 2, title: "10 Spins & 1M Coins", url: "https://static.coinmaster.com/reward2", date: "2024-05-20" },
-  { id: 3, title: "50 Spins - Weekend Bonus", url: "https://static.coinmaster.com/reward3", date: "2024-05-19" },
-];
-
-export const MOCK_COIN_LINKS = [
-  { id: 1, title: "2M Coins - Daily Reward", url: "https://static.coinmaster.com/coins1", date: "2024-05-20" },
-  { id: 2, title: "3.5M Coins - Special Pack", url: "https://static.coinmaster.com/coins2", date: "2024-05-19" },
-];
+// URL API chính thức của bạn sau khi deploy backend
+// Hệ thống sẽ tự động gọi đến các file .php để lấy link mới nhất
+export const API_BASE_URL = window.location.origin + "/api/";
 
 export const ICONS = {
   Spin: (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
-      <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-      <path d="M12 8v4l3 3" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <path d="M21.5 2v6h-6M2.5 22v-6h6M2 12c0-4.4 3.6-8 8-8 3.3 0 6.1 2 7.3 4.9L21.5 8M2.5 16l4.2-3.1C7.9 10 10.7 8 14 8c4.4 0 8 3.6 8 8 0 3.3-2 6.1-4.9 7.3L12 22" />
     </svg>
   ),
   Coin: (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
-      <circle cx="8" cy="8" r="6" />
-      <path d="M18.09 10.37A6 6 0 1 1 10.34 18.06" />
-      <path d="M7 6h2v4H7zM15 14h2v4h-2z" />
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="8" />
+      <line x1="12" y1="8" x2="12" y2="16" />
+      <line x1="8" y1="12" x2="16" y2="12" />
     </svg>
   ),
   Event: (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
     </svg>
   ),
+  History: (props: any) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
+      <circle cx="12" cy="12" r="10" />
+      <polyline points="12 6 12 12 16 14" />
+    </svg>
+  ),
   Hammer: (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
       <path d="m15 5 4 4" />
       <path d="M18 2l4 4" />
       <path d="m2 22 7-7" />
@@ -56,13 +54,6 @@ export const ICONS = {
   Shield: (props: any) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
-    </svg>
-  ),
-  History: (props: any) => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...props}>
-      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
-      <path d="M3 3v5h5" />
-      <path d="M12 7v5l4 2" />
     </svg>
   ),
 };

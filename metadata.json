@@ -1,6 +1,6 @@
 {
-  "name": "『Spin』Vũ•rCoinmaster - System Showcase",
-  "description": "A comprehensive web-based implementation and developer dashboard for the 『Spin』Vũ•rCoinmaster Android app and PHP backend system, featuring an event counter, link lists, and full source code documentation.",
+  "name": "VŨ•SPIN - rCoinmaster Auto",
+  "description": "Hệ thống tự động đồng bộ link quà tặng Coin Master mỗi ngày, tích hợp bộ đếm sự kiện và lịch sử quay chuyên nghiệp.",
   "requestFramePermissions": [
     "camera"
   ]

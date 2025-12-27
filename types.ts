@@ -6,8 +6,7 @@ export enum AppView {
   EVENT_COUNTER = 'EVENT_COUNTER',
   HISTORY = 'HISTORY',
   USAGE = 'USAGE',
-  CONTACT = 'CONTACT',
-  DEVELOPER_RESOURCES = 'DEVELOPER_RESOURCES'
+  CONTACT = 'CONTACT'
 }
 
 export enum EventType {
@@ -29,10 +28,4 @@ export interface EventSession {
   date: string;
   total: number;
   counts: Record<EventType, number>;
-}
-
-export interface CodeSnippet {
-  title: string;
-  language: string;
-  code: string;
 }
