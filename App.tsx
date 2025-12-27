@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppView, EventType, EventSession } from './types';
-import { CONTACT_INFO, ICONS } from './constants';
-import Dashboard from './components/Dashboard';
-import LinkView from './components/LinkView';
-import EventCounter from './components/EventCounter';
-import HistoryView from './components/HistoryView';
+import { AppView, EventType, EventSession } from './types.ts';
+import { CONTACT_INFO, ICONS } from './constants.tsx';
+import Dashboard from './components/Dashboard.tsx';
+import LinkView from './components/LinkView.tsx';
+import EventCounter from './components/EventCounter.tsx';
+import HistoryView from './components/HistoryView.tsx';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>(AppView.DASHBOARD);

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { AppView } from '../types';
-import { ICONS } from '../constants';
+import { AppView } from '../types.ts';
+import { ICONS } from '../constants.tsx';
 
 interface DashboardProps {
   onViewChange: (view: AppView) => void;

@@ -24,18 +24,8 @@
           -webkit-tap-highlight-color: transparent;
           user-select: none;
         }
-        /* Ngăn chặn việc kéo để refresh trên một số trình duyệt mobile */
         body {
           overscroll-behavior-y: contain;
-        }
-        .glass-morphism {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .dark .glass-morphism {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 <script type="importmap">
@@ -52,5 +42,7 @@
 </head>
 <body class="bg-gray-50 text-gray-900 transition-colors duration-200">
     <div id="root"></div>
+    <!-- Quan trọng: Dòng này để khởi chạy ứng dụng -->
+    <script type="module" src="index.tsx"></script>
 </body>
 </html>
