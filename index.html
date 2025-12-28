@@ -6,6 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>『Spin』Vũ•SymCoinMaster</title>
     
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="『Spin』Vũ•SymCoinMaster">
+    <meta name="description" content="Nhận Spin và Coin miễn phí mỗi ngày. Bộ công cụ hỗ trợ Coin Master chuyên nghiệp bởi Mr Vũ.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mxh-coinmaster.vercel.app/">
+    <meta property="og:title" content="『Spin』Vũ•SymCoinMaster">
+    <meta property="og:description" content="Nhận quà Spin & Coin tự động cập nhật mỗi 30p.">
+    <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/2489/2489756.png">
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,6 +37,11 @@
         }
         body {
           overscroll-behavior-y: contain;
+          background-color: #f9fafb;
+        }
+        .received-link {
+          opacity: 0.6;
+          filter: grayscale(0.5);
         }
     </style>
 <script type="importmap">
@@ -42,7 +58,6 @@
 </head>
 <body class="bg-gray-50 text-gray-900 transition-colors duration-200">
     <div id="root"></div>
-    <!-- Quan trọng: Dòng này để khởi chạy ứng dụng -->
     <script type="module" src="index.tsx"></script>
 </body>
 </html>
