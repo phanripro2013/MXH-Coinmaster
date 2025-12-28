@@ -38,27 +38,35 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
   const openGame = () => {
     const PACKAGE_NAME = "com.moonactive.coinmaster";
     const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PACKAGE_NAME}`;
-    const APP_SCHEME = "fb1614741348821033"; // Coin Master Scheme
+    const APP_SCHEME = "fb1614741348821033"; 
     
     const isAndroid = /Android/i.test(navigator.userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (isAndroid) {
-      // Intent chuẩn Senior: Tự mở app hoặc tự vào Play Store nếu chưa cài
+      // Logic Intent Android tối ưu: Mở App -> Không có -> Tự nhảy Play Store
       const androidIntent = `intent://#Intent;scheme=${APP_SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
       window.location.href = androidIntent;
     } else if (isIOS) {
+      // iOS Scheme
       window.location.href = `${APP_SCHEME}://`;
+      // Timeout fallback cho iOS
+      setTimeout(() => {
+        if (!document.hidden) {
+          window.location.href = "https://apps.apple.com/app/id1061219075";
+        }
+      }, 2500);
     } else {
       window.open("https://getcoinmaster.com", "_blank");
     }
 
-    // Backup timer cho các trình duyệt cũ không hỗ trợ Intent tốt
+    // Chế độ dự phòng hết thời gian (Timeout Fallback) cho mọi trường hợp
     setTimeout(() => {
       if (!document.hidden) {
+        console.log("Fallback to Play Store/Website...");
         window.location.href = PLAY_STORE_URL;
       }
-    }, 2500);
+    }, 3000);
   };
 
   const total = history.length;

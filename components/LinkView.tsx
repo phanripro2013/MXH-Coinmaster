@@ -44,8 +44,17 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
     setClaimedLinks(newClaimed);
     localStorage.setItem('claimed_links_v2', JSON.stringify(newClaimed));
     
-    // Sử dụng href để kích hoạt trình xử lý Deep Link của Android/iOS
+    // Mở URL quà tặng (Hệ điều hành sẽ tự hỏi mở bằng App Coin Master)
     window.location.href = url;
+
+    // Timeout fallback nếu trang trắng/không mở được game
+    setTimeout(() => {
+      if (!document.hidden) {
+        console.log("Link fallback triggered");
+        // Nếu sau 3s vẫn ở đây, có thể trình duyệt chưa xử lý được deep link
+        // Chúng ta không ép sang Store ở đây vì link reward là link web có thể mở được
+      }
+    }, 3000);
   };
 
   return (
@@ -67,9 +76,9 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
           <span className="text-lg">🚀</span> HƯỚNG DẪN NHẬN
         </h4>
         <ul className="text-[10px] text-blue-700 dark:text-blue-300 font-bold space-y-2 list-disc ml-4 leading-relaxed">
-          <li>Nên sử dụng <b>Google Chrome</b> để nạp link nhanh nhất.</li>
-          <li>Đảm bảo ứng dụng <b>Coin Master</b> đã được cài đặt trên máy.</li>
-          <li>Nếu không tự mở game, hãy nhấn chọn "Mở bằng ứng dụng" trong menu trình duyệt.</li>
+          <li>Sử dụng <b>Google Chrome</b> trên Android để mở game tốt nhất.</li>
+          <li>Nếu không tự mở game: Chọn "Mở bằng ứng dụng" trong menu trình duyệt.</li>
+          <li>Hệ thống tự động sử dụng <b>intent://</b> để kích hoạt ứng dụng.</li>
         </ul>
       </div>
 
