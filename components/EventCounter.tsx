@@ -32,7 +32,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
       setSpinsSinceSym(prev => prev + 1);
     }
 
-    // Haptic feedback simulation
+    // Haptic feedback
     const btn = document.getElementById(`btn-${type}`);
     btn?.classList.add('scale-90', 'brightness-125');
     setTimeout(() => btn?.classList.remove('scale-90', 'brightness-125'), 100);
@@ -46,22 +46,28 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
   };
 
   const openGame = () => {
-    // Attempt multiple methods to trigger Coin Master
-    const coinMasterDeepLink = "fb1614741348821033://";
-    const androidIntent = "intent://#Intent;scheme=fb1614741348821033;package=com.moonactive.coinmaster;end";
-    
     const isAndroid = /Android/i.test(navigator.userAgent);
-    
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+    // Deep link chuẩn cho Coin Master
+    const coinMasterURL = "fb1614741348821033://"; 
+    const intentURL = "intent://#Intent;scheme=fb1614741348821033;package=com.moonactive.coinmaster;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.moonactive.coinmaster;end";
+
     if (isAndroid) {
-      window.location.href = androidIntent;
+      // Cách tốt nhất để vượt qua Cốc Cốc/Chrome là dùng window.location.assign
+      window.location.assign(intentURL);
+    } else if (isIOS) {
+      window.location.href = coinMasterURL;
     } else {
-      window.location.href = coinMasterDeepLink;
+      window.open("https://getcoinmaster.com", "_blank");
     }
-    
-    // Fallback info
+
+    // Fallback: Nếu sau 2.5s không thoát khỏi trình duyệt thì báo lỗi
     setTimeout(() => {
-       console.log("Deep link triggered. If nothing happens, app might not be installed.");
-    }, 500);
+      if (!document.hidden) {
+        alert("LƯU Ý: Nếu game không tự mở, hãy nhấn 'Mở bằng ứng dụng' trong menu trình duyệt hoặc kiểm tra xem bạn đã cài Coin Master chưa.");
+      }
+    }, 2500);
   };
 
   const total = history.length;
@@ -76,21 +82,19 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
 
   return (
     <div className="p-4 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* Header & Game Link */}
       <div className="flex items-center justify-between">
         <button onClick={onBack} className="text-gray-500 font-bold px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-xl">
           ← Thoát
         </button>
         <button 
           onClick={openGame}
-          className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-xl font-black text-sm flex items-center gap-2 shadow-lg shadow-green-900/20 active:scale-95 transition-transform"
+          className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-xl font-black text-xs flex items-center gap-2 shadow-lg shadow-green-900/20 active:scale-95 transition-transform"
         >
-          <div className="w-2 h-2 bg-white rounded-full animate-ping"></div>
-          MỞ COIN MASTER
+          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+          MỞ GAME NGAY
         </button>
       </div>
 
-      {/* Main Stats Display */}
       <div className="bg-gray-900 rounded-[2rem] p-6 text-white border border-gray-800 shadow-2xl relative overflow-hidden">
         <div className="flex justify-between items-end relative z-10">
           <div>
@@ -98,18 +102,16 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
             <h1 className="text-5xl font-black tabular-nums">{total}</h1>
           </div>
           <div className="text-right">
-            <p className={`text-xs font-black uppercase tracking-tighter ${advice.color}`}>
+            <p className={`text-[10px] font-black uppercase tracking-tighter ${advice.color}`}>
               {advice.text}
             </p>
             <p className="text-[10px] text-gray-500 font-bold mt-1">Lượt lỡ: {spinsSinceSym}</p>
           </div>
         </div>
-        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-600/10 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Multipliers */}
       <div className="space-y-2">
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Mức cược hiện tại</p>
+        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Mức cược</p>
         <div className="grid grid-cols-5 gap-2">
           {MULTIPLIERS.map(x => (
             <button
@@ -117,8 +119,8 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
               onClick={() => setSelectedX(x)}
               className={`py-3 rounded-xl font-black text-sm transition-all border-2 ${
                 selectedX === x 
-                ? 'bg-blue-600 border-blue-400 text-white scale-105 shadow-lg shadow-blue-500/20' 
-                : 'bg-white dark:bg-gray-800 border-transparent text-gray-400 dark:text-gray-500'
+                ? 'bg-blue-600 border-blue-400 text-white scale-105 shadow-lg' 
+                : 'bg-white dark:bg-gray-800 border-transparent text-gray-400'
               }`}
             >
               x{x}
@@ -127,7 +129,6 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
         </div>
       </div>
 
-      {/* Symbol Buttons */}
       <div className="grid grid-cols-2 gap-3">
         {[
           { type: EventType.PIG, label: 'HEO (RAID)', icon: <ICONS.Pig className="w-8 h-8" />, color: 'bg-pink-500 shadow-pink-500/20' },
@@ -139,39 +140,27 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
             key={item.type}
             id={`btn-${item.type}`}
             onClick={() => increment(item.type)}
-            className={`${item.color} text-white p-5 rounded-[2rem] shadow-xl flex flex-col items-center justify-center transition active:scale-90 group relative overflow-hidden`}
+            className={`${item.color} text-white p-5 rounded-[2.5rem] shadow-xl flex flex-col items-center justify-center transition active:scale-90 group relative overflow-hidden`}
           >
             <div className="relative z-10 flex flex-col items-center">
               {item.icon}
               <span className="text-[10px] font-black mt-2 opacity-80 uppercase">{item.label}</span>
               <span className="text-2xl font-black mt-1">{counts[item.type]}</span>
             </div>
-            <div className="absolute inset-0 bg-white/10 opacity-0 group-active:opacity-100 transition-opacity"></div>
           </button>
         ))}
       </div>
 
-      {/* Action Buttons */}
       <div className="grid grid-cols-2 gap-3 pt-2">
-        <button 
-          onClick={undo}
-          className="py-4 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-2xl font-black text-sm uppercase flex items-center justify-center gap-2"
-        >
-          Hoàn tác
-        </button>
+        <button onClick={undo} className="py-4 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-2xl font-black text-[11px] uppercase">Hoàn tác</button>
         <button 
           onClick={() => {
             const totalCount = (Object.values(counts) as number[]).reduce((a, b) => a + b, 0);
             if (totalCount === 0) return;
-            onSave({
-              id: Date.now().toString(),
-              date: new Date().toLocaleDateString('vi-VN'),
-              total: totalCount,
-              counts: { ...counts }
-            });
+            onSave({ id: Date.now().toString(), date: new Date().toLocaleDateString('vi-VN'), total: totalCount, counts: { ...counts } });
             onBack();
           }}
-          className="py-4 bg-gray-900 dark:bg-blue-600 text-white rounded-2xl font-black text-sm uppercase shadow-xl active:scale-95 transition-transform"
+          className="py-4 bg-gray-900 dark:bg-blue-600 text-white rounded-2xl font-black text-[11px] uppercase shadow-xl"
         >
           Lưu kết quả
         </button>
