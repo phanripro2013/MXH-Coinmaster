@@ -20,14 +20,14 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
 
   const fetchLinks = async () => {
     setLoading(true);
-    // Giả lập lấy dữ liệu từ Backend
+    // Giả lập lấy dữ liệu từ API quà tặng
     const mockLinks: SpinLink[] = Array.from({ length: 15 }, (_, i) => {
       const amount = type === 'spin' ? (i % 3 === 0 ? '50' : '25') : (i + 1) * 2;
       return {
         id: i + 1,
-        title: type === 'spin' ? `${amount} Free Spins` : `${amount} Million Coins`,
-        url: `https://static.moonactive.net/static/coinmaster/reward.html?g=reward_${type}_${i}_${Math.random().toString(36).substr(2, 9)}`,
-        date: i === 0 ? 'Mới nhất' : `${i + 1} giờ trước`
+        title: type === 'spin' ? `${amount} Free Spins Rewards` : `${amount} Million Coins`,
+        url: `https://static.moonactive.net/static/coinmaster/reward.html?g=v_reward_${type}_${i}_${Date.now()}`,
+        date: i === 0 ? 'Vừa xong' : `${i + 1} giờ trước`
       };
     });
     
@@ -44,14 +44,8 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
     setClaimedLinks(newClaimed);
     localStorage.setItem('claimed_links_v2', JSON.stringify(newClaimed));
     
-    // Cách mở link tối ưu cho Android/iOS
-    const link = document.createElement('a');
-    link.href = url;
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Sử dụng href để kích hoạt trình xử lý Deep Link của Android/iOS
+    window.location.href = url;
   };
 
   return (
@@ -64,30 +58,31 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
           <h2 className="text-xl font-black dark:text-white uppercase tracking-tight">
             {type === 'spin' ? '🌀 Spin Rewards' : '🪙 Coin Rewards'}
           </h2>
-          <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Đã đồng bộ hệ thống</p>
+          <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Đã đồng bộ Link mới</p>
         </div>
       </div>
 
-      <div className="bg-blue-600 text-white p-5 rounded-[2rem] mb-8 shadow-xl shadow-blue-500/20">
-        <div className="flex gap-3 items-start">
-          <div className="p-2 bg-white/20 rounded-lg">💡</div>
-          <div>
-            <p className="text-[11px] font-black uppercase mb-1">Hướng dẫn kết nối:</p>
-            <p className="text-[10px] opacity-90 leading-relaxed font-bold">Nếu nhấn NHẬN mà không mở được game, hãy copy link web này và dán vào ứng dụng <b>Google Chrome</b> để có độ ổn định cao nhất.</p>
-          </div>
-        </div>
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-5 rounded-[2rem] mb-8">
+        <h4 className="text-[12px] font-black text-blue-800 dark:text-blue-400 uppercase mb-2 flex items-center gap-2">
+          <span className="text-lg">🚀</span> HƯỚNG DẪN NHẬN
+        </h4>
+        <ul className="text-[10px] text-blue-700 dark:text-blue-300 font-bold space-y-2 list-disc ml-4 leading-relaxed">
+          <li>Nên sử dụng <b>Google Chrome</b> để nạp link nhanh nhất.</li>
+          <li>Đảm bảo ứng dụng <b>Coin Master</b> đã được cài đặt trên máy.</li>
+          <li>Nếu không tự mở game, hãy nhấn chọn "Mở bằng ứng dụng" trong menu trình duyệt.</li>
+        </ul>
       </div>
 
       {loading ? (
         <div className="space-y-4">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 bg-white dark:bg-gray-800 animate-pulse rounded-[2.5rem] border border-gray-100"></div>)}
+          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 bg-white dark:bg-gray-800 animate-pulse rounded-[2.5rem]"></div>)}
         </div>
       ) : (
         <div className="space-y-4">
           {links.map((link) => {
             const isClaimed = claimedLinks.includes(link.id);
             return (
-              <div key={link.id} className={`bg-white dark:bg-gray-800 p-5 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 transition-all ${isClaimed ? 'opacity-40 grayscale scale-[0.98]' : 'hover:shadow-md'}`}>
+              <div key={link.id} className={`bg-white dark:bg-gray-800 p-5 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 transition-all ${isClaimed ? 'opacity-40 grayscale scale-[0.98]' : ''}`}>
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 flex items-center justify-center rounded-2xl ${type === 'spin' ? 'bg-blue-50 text-blue-600' : 'bg-yellow-50 text-yellow-600'}`}>
                     {type === 'spin' ? <ICONS.Spin className="w-7 h-7" /> : <ICONS.Coin className="w-7 h-7" />}
@@ -101,7 +96,7 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
                     onClick={() => handleClaim(link.id, link.url)}
                     className={`px-5 py-2.5 rounded-2xl font-black text-[11px] text-white uppercase shadow-md active:scale-90 transition-all ${isClaimed ? 'bg-gray-400' : type === 'spin' ? 'bg-blue-600' : 'bg-yellow-500'}`}
                   >
-                    {isClaimed ? 'Đã nhận' : 'Nhận'}
+                    {isClaimed ? 'Đã lấy' : 'Nhận'}
                   </button>
                 </div>
               </div>

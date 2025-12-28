@@ -35,29 +35,30 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
     setHistory(prev => prev.slice(0, -1));
   };
 
-  // HÀM QUAN TRỌNG NHẤT: SMART LAUNCHER
   const openGame = () => {
-    const intentURL = "intent://#Intent;scheme=fb1614741348821033;package=com.moonactive.coinmaster;S.browser_fallback_url=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.moonactive.coinmaster;end";
-    const iosURL = "fb1614741348821033://";
-
-    // Tạo một thẻ link ẩn để "ép" trình duyệt mở app
-    const link = document.createElement('a');
-    const isAndroid = /Android/i.test(navigator.userAgent);
+    const PACKAGE_NAME = "com.moonactive.coinmaster";
+    const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PACKAGE_NAME}`;
+    const APP_SCHEME = "fb1614741348821033"; // Coin Master Scheme
     
-    link.href = isAndroid ? intentURL : iosURL;
-    link.rel = "noreferrer";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
-    // Fallback nếu sau 3s vẫn ở trình duyệt
+    if (isAndroid) {
+      // Intent chuẩn Senior: Tự mở app hoặc tự vào Play Store nếu chưa cài
+      const androidIntent = `intent://#Intent;scheme=${APP_SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
+      window.location.href = androidIntent;
+    } else if (isIOS) {
+      window.location.href = `${APP_SCHEME}://`;
+    } else {
+      window.open("https://getcoinmaster.com", "_blank");
+    }
+
+    // Backup timer cho các trình duyệt cũ không hỗ trợ Intent tốt
     setTimeout(() => {
       if (!document.hidden) {
-        if (confirm("Nếu game không tự mở, bạn có muốn đi tới trang nhận quà chính thức không?")) {
-          window.location.href = "https://static.moonactive.net/static/coinmaster/reward.html";
-        }
+        window.location.href = PLAY_STORE_URL;
       }
-    }, 3000);
+    }, 2500);
   };
 
   const total = history.length;
@@ -78,7 +79,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
           className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-2xl font-black text-xs flex items-center gap-2 shadow-xl shadow-blue-900/20 active:scale-95 transition-all"
         >
           <ICONS.Spin className="w-4 h-4 animate-spin" />
-          MỞ GAME COIN MASTER
+          MỞ GAME NGAY
         </button>
       </div>
 
@@ -98,7 +99,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
       </div>
 
       <div className="space-y-3">
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Mức cược hiện tại</p>
+        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Mức cược</p>
         <div className="grid grid-cols-5 gap-2">
           {MULTIPLIERS.map(x => (
             <button
@@ -107,7 +108,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
               className={`py-3.5 rounded-2xl font-black text-sm transition-all border-2 ${
                 selectedX === x 
                 ? 'bg-blue-600 border-blue-400 text-white scale-105 shadow-lg' 
-                : 'bg-white dark:bg-gray-800 border-transparent text-gray-400 dark:text-gray-500'
+                : 'bg-white dark:bg-gray-800 border-transparent text-gray-400'
               }`}
             >
               x{x}
@@ -126,7 +127,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
           <button
             key={item.type}
             onClick={() => increment(item.type)}
-            className={`${item.color} text-white p-6 rounded-[3rem] shadow-xl flex flex-col items-center justify-center transition active:scale-90 group`}
+            className={`${item.color} text-white p-6 rounded-[3rem] shadow-xl flex flex-col items-center justify-center transition active:scale-90`}
           >
             {item.icon}
             <span className="text-[10px] font-black mt-3 opacity-90 uppercase tracking-tight">{item.label}</span>
@@ -136,7 +137,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-4">
-        <button onClick={undo} className="py-5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-[1.5rem] font-black text-[12px] uppercase active:scale-95 transition-all">Hoàn tác</button>
+        <button onClick={undo} className="py-5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-[1.5rem] font-black text-[12px] uppercase">Hoàn tác</button>
         <button 
           onClick={() => {
             const totalCount = (Object.values(counts) as number[]).reduce((a, b) => a + b, 0);
@@ -144,7 +145,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
             onSave({ id: Date.now().toString(), date: new Date().toLocaleDateString('vi-VN'), total: totalCount, counts: { ...counts } });
             onBack();
           }}
-          className="py-5 bg-blue-600 text-white rounded-[1.5rem] font-black text-[12px] uppercase shadow-xl active:scale-95 transition-all"
+          className="py-5 bg-blue-600 text-white rounded-[1.5rem] font-black text-[12px] uppercase shadow-xl"
         >
           Lưu lịch sử
         </button>
