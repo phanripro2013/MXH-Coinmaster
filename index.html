@@ -10,12 +10,17 @@
     <meta name="title" content="『Spin』Vũ•SymCoinMaster">
     <meta name="description" content="Nhận Spin và Coin miễn phí mỗi ngày. Bộ công cụ hỗ trợ Coin Master chuyên nghiệp bởi Mr Vũ.">
 
-    <!-- Open Graph / Facebook -->
+    <!-- Open Graph / Facebook / Zalo -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://mxh-coinmaster.vercel.app/">
-    <meta property="og:title" content="『Spin』Vũ•SymCoinMaster">
-    <meta property="og:description" content="Nhận quà Spin & Coin tự động cập nhật mỗi 30p.">
+    <meta property="og:title" content="『Spin』Vũ•SymCoinMaster - Quà Tặng Mỗi Ngày">
+    <meta property="og:description" content="Click nhận ngay 25-100 Spin miễn phí. Tự động cập nhật 24/7.">
     <meta property="og:image" content="https://cdn-icons-png.flaticon.com/512/2489/2489756.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="『Spin』Vũ•SymCoinMaster">
+    <meta property="twitter:description" content="Hệ thống hỗ trợ Coin Master chuyên nghiệp.">
 
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#2563eb">
@@ -34,15 +39,16 @@
           font-family: 'Inter', sans-serif; 
           -webkit-tap-highlight-color: transparent;
           user-select: none;
-        }
-        body {
           overscroll-behavior-y: contain;
           background-color: #f9fafb;
         }
         .received-link {
-          opacity: 0.6;
-          filter: grayscale(0.5);
+          opacity: 0.5;
+          filter: grayscale(0.8);
+          pointer-events: none;
         }
+        /* Fix for Cốc Cốc / Chrome mobile tap highlight */
+        * { -webkit-tap-highlight-color: transparent; }
     </style>
 <script type="importmap">
 {
