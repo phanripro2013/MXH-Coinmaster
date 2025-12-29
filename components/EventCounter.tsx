@@ -38,35 +38,53 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
   const openGame = () => {
     const PACKAGE_NAME = "com.moonactive.coinmaster";
     const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PACKAGE_NAME}`;
-    const APP_SCHEME = "fb1614741348821033"; 
+    // Coin Master Scheme chuẩn cho Deep Link
+    const SCHEME = "fb1614741348821033"; 
     
     const isAndroid = /Android/i.test(navigator.userAgent);
     const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
     if (isAndroid) {
-      // Logic Intent Android tối ưu: Mở App -> Không có -> Tự nhảy Play Store
-      const androidIntent = `intent://#Intent;scheme=${APP_SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
+      /**
+       * ANDROID INTENT (Senior Method):
+       * intent://#Intent;
+       * scheme=[SCHEME_ID];
+       * package=[PACKAGE_NAME];
+       * S.browser_fallback_url=[FALLBACK_URL];
+       * end
+       */
+      const androidIntent = `intent://#Intent;scheme=${SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
+      
+      // Lệnh thực thi mở App
       window.location.href = androidIntent;
+
     } else if (isIOS) {
-      // iOS Scheme
-      window.location.href = `${APP_SCHEME}://`;
-      // Timeout fallback cho iOS
-      setTimeout(() => {
-        if (!document.hidden) {
-          window.location.href = "https://apps.apple.com/app/id1061219075";
-        }
-      }, 2500);
+      window.location.href = `${SCHEME}://`;
     } else {
       window.open("https://getcoinmaster.com", "_blank");
     }
 
-    // Chế độ dự phòng hết thời gian (Timeout Fallback) cho mọi trường hợp
-    setTimeout(() => {
-      if (!document.hidden) {
-        console.log("Fallback to Play Store/Website...");
-        window.location.href = PLAY_STORE_URL;
+    /**
+     * CHẾ ĐỘ DỰ PHÒNG HẾT THỜI GIAN (Fallback Timer)
+     * Nếu sau 2.5 giây mà ứng dụng vẫn đang hiển thị (nghĩa là app không mở được)
+     * thì ép chuyển hướng sang Google Play/App Store
+     */
+    const start = Date.now();
+    const timeout = setTimeout(() => {
+      const now = Date.now();
+      // Nếu browser vẫn hiển thị và thời gian chờ chưa quá lâu
+      if (!document.hidden && (now - start) < 4000) {
+        window.location.href = isIOS 
+          ? "https://apps.apple.com/app/id1061219075" 
+          : PLAY_STORE_URL;
       }
-    }, 3000);
+    }, 2500);
+
+    // Xóa timer nếu người dùng đã rời khỏi browser (App đã mở thành công)
+    window.onblur = () => clearTimeout(timeout);
+    document.onvisibilitychange = () => {
+      if (document.hidden) clearTimeout(timeout);
+    };
   };
 
   const total = history.length;

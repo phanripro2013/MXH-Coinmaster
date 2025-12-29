@@ -44,17 +44,19 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
     setClaimedLinks(newClaimed);
     localStorage.setItem('claimed_links_v2', JSON.stringify(newClaimed));
     
-    // Mở URL quà tặng (Hệ điều hành sẽ tự hỏi mở bằng App Coin Master)
-    window.location.href = url;
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    const PACKAGE_NAME = "com.moonactive.coinmaster";
 
-    // Timeout fallback nếu trang trắng/không mở được game
-    setTimeout(() => {
-      if (!document.hidden) {
-        console.log("Link fallback triggered");
-        // Nếu sau 3s vẫn ở đây, có thể trình duyệt chưa xử lý được deep link
-        // Chúng ta không ép sang Store ở đây vì link reward là link web có thể mở được
-      }
-    }, 3000);
+    if (isAndroid) {
+      /**
+       * Tối ưu Intent cho Link Reward:
+       * Chúng ta bọc URL moonactive vào trong một Intent Android.
+       */
+      const intentUrl = `intent://${url.replace(/^https?:\/\//, '')}#Intent;package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(url)};end`;
+      window.location.href = intentUrl;
+    } else {
+      window.location.href = url;
+    }
   };
 
   return (
@@ -73,12 +75,12 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
 
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-5 rounded-[2rem] mb-8">
         <h4 className="text-[12px] font-black text-blue-800 dark:text-blue-400 uppercase mb-2 flex items-center gap-2">
-          <span className="text-lg">🚀</span> HƯỚNG DẪN NHẬN
+          <span className="text-lg">🚀</span> CHẾ ĐỘ APK NÂNG CAO
         </h4>
         <ul className="text-[10px] text-blue-700 dark:text-blue-300 font-bold space-y-2 list-disc ml-4 leading-relaxed">
-          <li>Sử dụng <b>Google Chrome</b> trên Android để mở game tốt nhất.</li>
-          <li>Nếu không tự mở game: Chọn "Mở bằng ứng dụng" trong menu trình duyệt.</li>
-          <li>Hệ thống tự động sử dụng <b>intent://</b> để kích hoạt ứng dụng.</li>
+          <li>Tự động kích hoạt <b>Android Intent</b> để gọi ứng dụng.</li>
+          <li>Tự động nhảy vào <b>Google Play</b> nếu máy chưa cài game.</li>
+          <li>Hỗ trợ cơ chế <b>Fallback Timer</b> xử lý sự cố nạp link.</li>
         </ul>
       </div>
 
