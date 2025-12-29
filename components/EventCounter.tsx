@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { EventType, EventSession } from '../types';
 import { ICONS } from '../constants';
 
@@ -37,54 +37,22 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
 
   const openGame = () => {
     const PACKAGE_NAME = "com.moonactive.coinmaster";
-    const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PACKAGE_NAME}`;
-    // Coin Master Scheme chuẩn cho Deep Link
     const SCHEME = "fb1614741348821033"; 
+    const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PACKAGE_NAME}`;
     
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    // Tạo intent string chính xác để Android/Kodular có thể bắt được
+    const intentUri = `intent://#Intent;scheme=${SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
 
-    if (isAndroid) {
-      /**
-       * ANDROID INTENT (Senior Method):
-       * intent://#Intent;
-       * scheme=[SCHEME_ID];
-       * package=[PACKAGE_NAME];
-       * S.browser_fallback_url=[FALLBACK_URL];
-       * end
-       */
-      const androidIntent = `intent://#Intent;scheme=${SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
-      
-      // Lệnh thực thi mở App
-      window.location.href = androidIntent;
+    // Cố gắng mở qua window.location
+    window.location.href = intentUri;
 
-    } else if (isIOS) {
-      window.location.href = `${SCHEME}://`;
-    } else {
-      window.open("https://getcoinmaster.com", "_blank");
-    }
-
-    /**
-     * CHẾ ĐỘ DỰ PHÒNG HẾT THỜI GIAN (Fallback Timer)
-     * Nếu sau 2.5 giây mà ứng dụng vẫn đang hiển thị (nghĩa là app không mở được)
-     * thì ép chuyển hướng sang Google Play/App Store
-     */
-    const start = Date.now();
-    const timeout = setTimeout(() => {
-      const now = Date.now();
-      // Nếu browser vẫn hiển thị và thời gian chờ chưa quá lâu
-      if (!document.hidden && (now - start) < 4000) {
-        window.location.href = isIOS 
-          ? "https://apps.apple.com/app/id1061219075" 
-          : PLAY_STORE_URL;
+    // Fallback nếu WebView không hỗ trợ intent:// trực tiếp
+    setTimeout(() => {
+      if (!document.hidden) {
+        // Nếu trang vẫn hiển thị, thử mở scheme thô (Kodular CustomWebView thường bắt được cái này)
+        window.location.href = `${SCHEME}://`;
       }
-    }, 2500);
-
-    // Xóa timer nếu người dùng đã rời khỏi browser (App đã mở thành công)
-    window.onblur = () => clearTimeout(timeout);
-    document.onvisibilitychange = () => {
-      if (document.hidden) clearTimeout(timeout);
-    };
+    }, 1000);
   };
 
   const total = history.length;
@@ -97,7 +65,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
   return (
     <div className="p-4 space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="flex items-center justify-between">
-        <button onClick={onBack} className="text-gray-500 font-bold px-4 py-2 bg-white border border-gray-100 dark:bg-gray-800 rounded-2xl shadow-sm">
+        <button onClick={onBack} className="text-gray-500 font-bold px-4 py-2 bg-white border border-gray-100 dark:bg-gray-800 rounded-2xl shadow-sm active:scale-95 transition-transform">
           ← Quay lại
         </button>
         <button 
@@ -163,7 +131,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-4">
-        <button onClick={undo} className="py-5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-[1.5rem] font-black text-[12px] uppercase">Hoàn tác</button>
+        <button onClick={undo} className="py-5 bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-[1.5rem] font-black text-[12px] uppercase active:scale-95 transition-transform">Hoàn tác</button>
         <button 
           onClick={() => {
             const totalCount = (Object.values(counts) as number[]).reduce((a, b) => a + b, 0);
@@ -171,7 +139,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
             onSave({ id: Date.now().toString(), date: new Date().toLocaleDateString('vi-VN'), total: totalCount, counts: { ...counts } });
             onBack();
           }}
-          className="py-5 bg-blue-600 text-white rounded-[1.5rem] font-black text-[12px] uppercase shadow-xl"
+          className="py-5 bg-blue-600 text-white rounded-[1.5rem] font-black text-[12px] uppercase shadow-xl active:scale-95 transition-transform"
         >
           Lưu lịch sử
         </button>
