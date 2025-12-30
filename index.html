@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <title>『THV』Vũ•rCoinmaster</title>
     
-    <!-- Thư viện hỗ trợ -->
+    <!-- Thư viện nạp nhanh từ CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
@@ -22,7 +22,6 @@
           background-color: #f8fafc;
         }
         
-        /* Màn hình khởi động chuyên nghiệp */
         #loading-screen {
           position: fixed;
           inset: 0;
@@ -81,8 +80,12 @@
         }
 
         ::-webkit-scrollbar { display: none; }
-        .dark { background-color: #111827; }
     </style>
+
+    <!-- Shim cho môi trường React trong trình duyệt -->
+    <script>
+        window.process = { env: { NODE_ENV: 'production' } };
+    </script>
 
     <script type="importmap">
 {
@@ -90,7 +93,6 @@
     "react": "https://esm.sh/react@19.0.0",
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
-    "@google/genai": "https://esm.sh/@google/genai@1.34.0",
     "recharts": "https://esm.sh/recharts@2.15.0?external=react,react-dom",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
@@ -99,7 +101,7 @@
 </script>
 </head>
 <body class="bg-slate-50 overflow-x-hidden">
-    <!-- Màn hình chờ -->
+    <!-- Màn hình chờ khởi động -->
     <div id="loading-screen">
         <svg class="loader-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="50" cy="50" r="48" stroke="#2563eb" stroke-width="4" />
@@ -108,12 +110,12 @@
         <div class="loader-bar">
             <div class="loader-progress"></div>
         </div>
-        <div class="loader-text">THV Vũ • rCoinmaster</div>
+        <div class="loader-text">Khởi động hệ thống...</div>
     </div>
 
     <div id="root"></div>
 
-    <!-- Script chạy trực tiếp với Babel -->
-    <script type="text/babel" data-type="module" src="index.tsx"></script>
+    <!-- Quan trọng: data-presets="react,typescript" để xử lý file .tsx -->
+    <script type="text/babel" data-presets="react,typescript" data-type="module" src="index.tsx"></script>
 </body>
 </html>

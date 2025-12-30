@@ -3,29 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
-console.log("🚀 System Starting...");
-
-// Error Guard
-window.addEventListener('error', (event) => {
-  console.error("Critical Error:", event.error);
-  const root = document.getElementById('root');
-  const loadingScreen = document.getElementById('loading-screen');
-  if (loadingScreen) loadingScreen.style.display = 'none';
-  
-  if (root && root.innerHTML === '') {
-    root.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; padding:20px; text-align:center;">
-        <div style="background:#fee2e2; border:1px solid #ef4444; padding:20px; border-radius:20px; max-width:400px;">
-          <h2 style="color:#b91c1c; margin-top:0;">Lỗi Khởi Động</h2>
-          <p style="color:#7f1d1d; font-size:14px;">Hệ thống gặp sự cố khi tải dữ liệu từ GitHub. Vui lòng bấm nút bên dưới.</p>
-          <button onclick="location.reload()" style="background:#2563eb; color:white; border:none; padding:12px 24px; border-radius:12px; font-weight:bold; cursor:pointer; margin-top:10px;">TẢI LẠI TRANG</button>
-        </div>
-      </div>
-    `;
-  }
-});
+// Log khởi động
+console.log("%c『THV』Vũ•rCoinmaster System Initializing...", "color: #2563eb; font-weight: bold; font-size: 12px;");
 
 const rootElement = document.getElementById('root');
+
 if (rootElement) {
   try {
     const root = ReactDOM.createRoot(rootElement);
@@ -35,24 +17,39 @@ if (rootElement) {
       </React.StrictMode>
     );
     
-    // Ẩn màn hình loading sau khi render thành công
-    setTimeout(() => {
-      const loadingScreen = document.getElementById('loading-screen');
-      if (loadingScreen) {
-        loadingScreen.style.opacity = '0';
-        setTimeout(() => loadingScreen.style.display = 'none', 500);
+    // Tự động ẩn màn hình loading sau khi React đã nạp xong
+    const hideLoading = () => {
+      const loader = document.getElementById('loading-screen');
+      if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => {
+          loader.style.display = 'none';
+        }, 500);
       }
-    }, 1000);
-    
-    console.log("✅ App Rendered Successfully");
+    };
+
+    // Kiểm tra định kỳ xem App đã render chưa để ẩn loader
+    const checkInterval = setInterval(() => {
+      if (rootElement.innerHTML !== "") {
+        hideLoading();
+        clearInterval(checkInterval);
+        console.log("✅ Application Ready");
+      }
+    }, 100);
+
+    // Timeout an toàn sau 5s nếu có lỗi nạp
+    setTimeout(hideLoading, 5000);
+
   } catch (err) {
-    console.error("Render failed:", err);
+    console.error("Critical Render Error:", err);
+    const loader = document.getElementById('loading-screen');
+    if (loader) loader.innerHTML = `<div class="p-4 text-center"><p class="text-red-500 font-bold">Lỗi khởi động hệ thống.<br>Vui lòng thử lại.</p></div>`;
   }
 }
 
-// Service Worker an toàn
+// Service Worker (Optional)
 if ('serviceWorker' in navigator && window.location.protocol === 'https:') {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
+    navigator.serviceWorker.register('./sw.js').catch(err => console.debug('SW silent fail'));
   });
 }
