@@ -1,11 +1,10 @@
 {
-  "name": "『Spin』Vũ•SymCoinMaster",
-  "description": "Hệ thống tự động đồng bộ link quà tặng Coin Master mỗi ngày, tích hợp bộ đếm sự kiện và lịch sử quay chuyên nghiệp.",
-  "requestFramePermissions": [
-    "camera"
-  ],
+  "name": "Vũ•Sym Pro",
+  "description": "Tool hỗ trợ Coin Master chuyên nghiệp với logic đếm SYM và tự động nạp link quà tặng.",
+  "requestFramePermissions": [],
   "permissions": [
     "android.permission.INTERNET",
-    "android.permission.ACCESS_NETWORK_STATE"
+    "android.permission.ACCESS_NETWORK_STATE",
+    "android.permission.QUERY_ALL_PACKAGES"
   ]
 }

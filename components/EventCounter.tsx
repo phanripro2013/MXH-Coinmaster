@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { EventType, EventSession } from '../types';
 import { ICONS } from '../constants';
 
@@ -36,23 +36,12 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
   };
 
   const openGame = () => {
-    const PACKAGE_NAME = "com.moonactive.coinmaster";
-    const SCHEME = "fb1614741348821033"; 
-    const PLAY_STORE_URL = `https://play.google.com/store/apps/details?id=${PACKAGE_NAME}`;
-    
-    // Tạo intent string chính xác để Android/Kodular có thể bắt được
-    const intentUri = `intent://#Intent;scheme=${SCHEME};package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(PLAY_STORE_URL)};end`;
-
-    // Cố gắng mở qua window.location
-    window.location.href = intentUri;
-
-    // Fallback nếu WebView không hỗ trợ intent:// trực tiếp
-    setTimeout(() => {
-      if (!document.hidden) {
-        // Nếu trang vẫn hiển thị, thử mở scheme thô (Kodular CustomWebView thường bắt được cái này)
-        window.location.href = `${SCHEME}://`;
-      }
-    }, 1000);
+    /**
+     * DÀNH CHO BẠN (KODULAR):
+     * Khi nhấn nút này, trình duyệt trong APK sẽ chạy tới link ảo bên dưới.
+     * Trong Kodular, bạn chỉ cần kiểm tra: "Nếu URL chứa chữ 'mo-game' thì mở Coin Master".
+     */
+    window.location.href = "https://kodular.bridge/mo-game";
   };
 
   const total = history.length;
@@ -73,7 +62,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
           className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-2xl font-black text-xs flex items-center gap-2 shadow-xl shadow-blue-900/20 active:scale-95 transition-all"
         >
           <ICONS.Spin className="w-4 h-4 animate-spin" />
-          MỞ GAME NGAY
+          MỞ GAME COIN MASTER
         </button>
       </div>
 
@@ -93,7 +82,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
       </div>
 
       <div className="space-y-3">
-        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Mức cược</p>
+        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-2">Mức cược hiện tại</p>
         <div className="grid grid-cols-5 gap-2">
           {MULTIPLIERS.map(x => (
             <button

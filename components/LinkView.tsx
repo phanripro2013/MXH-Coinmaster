@@ -20,14 +20,14 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
 
   const fetchLinks = async () => {
     setLoading(true);
-    // Giả lập lấy dữ liệu từ API quà tặng
+    // Giả lập dữ liệu quà tặng
     const mockLinks: SpinLink[] = Array.from({ length: 15 }, (_, i) => {
       const amount = type === 'spin' ? (i % 3 === 0 ? '50' : '25') : (i + 1) * 2;
       return {
         id: i + 1,
-        title: type === 'spin' ? `${amount} Free Spins Rewards` : `${amount} Million Coins`,
-        url: `https://static.moonactive.net/static/coinmaster/reward.html?g=v_reward_${type}_${i}_${Date.now()}`,
-        date: i === 0 ? 'Vừa xong' : `${i + 1} giờ trước`
+        title: type === 'spin' ? `${amount} Free Spins` : `${amount} Million Coins`,
+        url: `https://static.moonactive.net/static/coinmaster/reward.html?g=v_reward_${type}_${i}`,
+        date: i === 0 ? 'Mới nhất' : `${i + 1} giờ trước`
       };
     });
     
@@ -44,61 +44,42 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
     setClaimedLinks(newClaimed);
     localStorage.setItem('claimed_links_v2', JSON.stringify(newClaimed));
     
-    const isAndroid = /Android/i.test(navigator.userAgent);
-    const PACKAGE_NAME = "com.moonactive.coinmaster";
-
-    if (isAndroid) {
-      /**
-       * Tối ưu Intent cho Link Reward:
-       * Chúng ta bọc URL moonactive vào trong một Intent Android.
-       */
-      const intentUrl = `intent://${url.replace(/^https?:\/\//, '')}#Intent;package=${PACKAGE_NAME};S.browser_fallback_url=${encodeURIComponent(url)};end`;
-      window.location.href = intentUrl;
-    } else {
-      window.location.href = url;
-    }
+    /**
+     * DÀNH CHO KODULAR:
+     * Gửi tín hiệu nhận quà qua link ảo.
+     */
+    window.location.href = `https://kodular.bridge/claim?url=${encodeURIComponent(url)}`;
   };
 
   return (
     <div className="p-6 animate-in slide-in-from-right-4 duration-300">
       <div className="flex items-center justify-between mb-8">
-        <button onClick={onBack} className="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-2xl">
+        <button onClick={onBack} className="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700 rounded-2xl active:scale-90 transition-transform">
           <span className="text-xl">←</span>
         </button>
         <div className="text-right">
           <h2 className="text-xl font-black dark:text-white uppercase tracking-tight">
-            {type === 'spin' ? '🌀 Spin Rewards' : '🪙 Coin Rewards'}
+            {type === 'spin' ? '🌀 Nhận Spin' : '🪙 Nhận Vàng'}
           </h2>
-          <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Đã đồng bộ Link mới</p>
+          <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Đã cập nhật link</p>
         </div>
-      </div>
-
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 p-5 rounded-[2rem] mb-8">
-        <h4 className="text-[12px] font-black text-blue-800 dark:text-blue-400 uppercase mb-2 flex items-center gap-2">
-          <span className="text-lg">🚀</span> CHẾ ĐỘ APK NÂNG CAO
-        </h4>
-        <ul className="text-[10px] text-blue-700 dark:text-blue-300 font-bold space-y-2 list-disc ml-4 leading-relaxed">
-          <li>Tự động kích hoạt <b>Android Intent</b> để gọi ứng dụng.</li>
-          <li>Tự động nhảy vào <b>Google Play</b> nếu máy chưa cài game.</li>
-          <li>Hỗ trợ cơ chế <b>Fallback Timer</b> xử lý sự cố nạp link.</li>
-        </ul>
       </div>
 
       {loading ? (
         <div className="space-y-4">
-          {[1, 2, 3, 4].map(i => <div key={i} className="h-24 bg-white dark:bg-gray-800 animate-pulse rounded-[2.5rem]"></div>)}
+          {[1, 2, 3].map(i => <div key={i} className="h-24 bg-white dark:bg-gray-800 animate-pulse rounded-[2.5rem]"></div>)}
         </div>
       ) : (
         <div className="space-y-4">
           {links.map((link) => {
             const isClaimed = claimedLinks.includes(link.id);
             return (
-              <div key={link.id} className={`bg-white dark:bg-gray-800 p-5 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 transition-all ${isClaimed ? 'opacity-40 grayscale scale-[0.98]' : ''}`}>
+              <div key={link.id} className={`bg-white dark:bg-gray-800 p-5 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 transition-all ${isClaimed ? 'opacity-40 grayscale' : ''}`}>
                 <div className="flex items-center gap-4">
                   <div className={`w-14 h-14 flex items-center justify-center rounded-2xl ${type === 'spin' ? 'bg-blue-50 text-blue-600' : 'bg-yellow-50 text-yellow-600'}`}>
                     {type === 'spin' ? <ICONS.Spin className="w-7 h-7" /> : <ICONS.Coin className="w-7 h-7" />}
                   </div>
-                  <div className="flex-1">
+                  <div className="flex-1 text-left">
                     <h3 className="font-black text-sm text-gray-800 dark:text-white leading-tight">{link.title}</h3>
                     <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider">{link.date}</span>
                   </div>
@@ -107,7 +88,7 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
                     onClick={() => handleClaim(link.id, link.url)}
                     className={`px-5 py-2.5 rounded-2xl font-black text-[11px] text-white uppercase shadow-md active:scale-90 transition-all ${isClaimed ? 'bg-gray-400' : type === 'spin' ? 'bg-blue-600' : 'bg-yellow-500'}`}
                   >
-                    {isClaimed ? 'Đã lấy' : 'Nhận'}
+                    {isClaimed ? 'Xong' : 'Lấy'}
                   </button>
                 </div>
               </div>
