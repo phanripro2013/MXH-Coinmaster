@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { EventSession } from '../types';
+// Updated import to use .ts extension for consistency and resolve missing member error
+import { EventSession } from '../types.ts';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 interface HistoryViewProps {

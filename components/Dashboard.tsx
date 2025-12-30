@@ -1,80 +1,95 @@
 
 import React from 'react';
 import { AppView } from '../types.ts';
-import { ICONS } from '../constants.tsx';
+import { ICONS, COLORS } from '../constants.tsx';
 
 interface DashboardProps {
   onViewChange: (view: AppView) => void;
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
-  const menuItems = [
-    { id: AppView.SPIN_LINKS, label: 'Spin Links', icon: <ICONS.Spin className="w-8 h-8" />, color: 'bg-blue-600', desc: 'Auto Update' },
-    { id: AppView.COIN_LINKS, label: 'Coin Links', icon: <ICONS.Coin className="w-8 h-8" />, color: 'bg-yellow-500', desc: 'Auto Update' },
-    { id: AppView.EVENT_COUNTER, label: 'Bộ đếm Sym', icon: <ICONS.Event className="w-8 h-8" />, color: 'bg-purple-600', desc: 'Tool Chuyên Nghiệp' },
-    { id: AppView.HISTORY, label: 'Thống kê quay', icon: <ICONS.History className="w-8 h-8" />, color: 'bg-orange-500', desc: 'Saved Sessions' },
-  ];
-
-  const handleFBLogin = () => {
-    window.location.href = "https://m.facebook.com/login";
-  };
-
   return (
-    <div className="p-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      {/* System Status Card */}
-      <div className="bg-gradient-to-br from-indigo-600 via-blue-700 to-blue-800 p-8 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group">
-        <div className="relative z-10">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="flex h-3 w-3 relative">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            <span className="text-xs font-black uppercase tracking-widest text-blue-100">Hệ thống đang hoạt động</span>
+    <div className="p-5 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+      {/* Welcome Section */}
+      <div className="flex justify-between items-end bg-white dark:bg-gray-800 p-6 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm">
+        <div>
+          <h1 className="text-xl font-black text-gray-900 dark:text-white tracking-tighter italic leading-none uppercase">『THV』Vũ•rCM</h1>
+          <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mt-2 flex items-center gap-1">
+             <ICONS.Badge className="w-3 h-3" /> System Official
+          </p>
+        </div>
+        <div className="w-12 h-12 relative">
+          <ICONS.LogoTHV className="w-full h-full drop-shadow-xl" />
+        </div>
+      </div>
+
+      {/* Main Categories */}
+      <div className="grid grid-cols-1 gap-5">
+        <button 
+          onClick={() => onViewChange(AppView.SPIN_LINKS)}
+          className="relative overflow-hidden group bg-gradient-to-br from-blue-600 via-indigo-700 to-blue-800 p-7 rounded-[3rem] text-white shadow-[0_20px_40px_rgba(37,99,235,0.2)] dark:shadow-none active:scale-95 transition-all text-left"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-125 transition-transform duration-700">
+            <ICONS.LogoTHV className="w-32 h-32 rotate-12" />
           </div>
-          <h2 className="text-3xl font-black mb-1 leading-tight tracking-tighter">VŨ•SYMCOINMASTER</h2>
-          <p className="text-blue-100/80 font-medium text-sm">Tự động cập nhật link quà tặng.</p>
-        </div>
-        
-        <div className="absolute top-0 right-0 p-6 opacity-20">
-          <ICONS.Event className="w-24 h-24 rotate-12" />
-        </div>
-      </div>
-
-      {/* Facebook Auto Login Bridge */}
-      <button 
-        onClick={handleFBLogin}
-        className="w-full bg-[#1877F2] p-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-transform"
-      >
-        <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        <span className="text-white font-black text-sm uppercase tracking-tight">Đăng nhập Facebook trước</span>
-      </button>
-
-      <div className="grid grid-cols-2 gap-4">
-        {menuItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => onViewChange(item.id as AppView)}
-            className="group relative bg-white dark:bg-gray-800 p-6 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300 text-left overflow-hidden active:scale-95"
-          >
-            <div className="flex flex-col gap-3 z-10 relative">
-              <div className={`w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
-                {item.icon}
-              </div>
-              <div>
-                <h3 className="font-black text-sm text-gray-800 dark:text-white uppercase tracking-tight leading-none mb-1">{item.label}</h3>
-                <p className="text-[9px] text-gray-400 font-bold uppercase">{item.desc}</p>
-              </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-black uppercase opacity-70 mb-1 tracking-[0.2em]">Cập nhật liên tục</p>
+              <h3 className="text-4xl font-black tracking-tighter italic">R-SPINS</h3>
+              <p className="mt-3 inline-flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase backdrop-blur-sm border border-white/10">
+                 Nhận ngay bây giờ <span className="animate-pulse">→</span>
+              </p>
             </div>
-          </button>
-        ))}
+            <ICONS.Spin className="w-16 h-16 opacity-40 group-hover:rotate-[360deg] transition-transform duration-1000" />
+          </div>
+        </button>
+
+        <button 
+          onClick={() => onViewChange(AppView.COIN_LINKS)}
+          className="relative overflow-hidden group bg-gradient-to-br from-amber-400 via-orange-500 to-amber-600 p-7 rounded-[3rem] text-white shadow-[0_20px_40px_rgba(245,158,11,0.2)] dark:shadow-none active:scale-95 transition-all text-left"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-125 transition-transform duration-700">
+            <ICONS.LogoTHV className="w-32 h-32 rotate-12" />
+          </div>
+          <div className="relative z-10 flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-black uppercase opacity-70 mb-1 tracking-[0.2em]">Triệu vàng mỗi ngày</p>
+              <h3 className="text-4xl font-black tracking-tighter italic">R-COINS</h3>
+              <p className="mt-3 inline-flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase backdrop-blur-sm border border-white/10">
+                 Mở túi vàng <span className="animate-pulse">→</span>
+              </p>
+            </div>
+            <ICONS.Coin className="w-16 h-16 opacity-40 group-hover:scale-110 transition-transform duration-700" />
+          </div>
+        </button>
       </div>
-      
+
+      {/* Trust Badge Section */}
+      <div className="grid grid-cols-2 gap-4">
+         <div className="bg-white dark:bg-gray-800 p-4 rounded-[2rem] border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+            <div className="w-10 h-10 bg-green-50 text-green-600 rounded-full flex items-center justify-center mb-2">
+               <ICONS.Badge className="w-6 h-6" />
+            </div>
+            <span className="text-[9px] font-black text-gray-400 uppercase">Bảo mật 100%</span>
+         </div>
+         <div className="bg-white dark:bg-gray-800 p-4 rounded-[2rem] border border-gray-100 dark:border-gray-700 flex flex-col items-center text-center">
+            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-2">
+               <ICONS.Gift className="w-6 h-6" />
+            </div>
+            <span className="text-[9px] font-black text-gray-400 uppercase">Quà tặng thật</span>
+         </div>
+      </div>
+
       <button 
         onClick={() => onViewChange(AppView.CONTACT)}
-        className="w-full bg-emerald-500 p-5 rounded-[2rem] text-white font-black flex items-center justify-center gap-2 shadow-xl shadow-emerald-200 dark:shadow-none active:scale-95 transition-transform uppercase text-sm tracking-widest"
+        className="w-full bg-slate-900 dark:bg-white dark:text-gray-900 p-5 rounded-[2rem] text-white font-black flex items-center justify-center gap-3 shadow-xl active:scale-95 transition-transform uppercase text-xs tracking-[0.2em] italic"
       >
-        <span>📞</span> Liên hệ Zalo Admin
+        <ICONS.LogoTHV className="w-5 h-5" /> HỖ TRỢ BẢN QUYỀN
       </button>
+
+      <p className="text-center text-[8px] font-bold text-gray-400 uppercase tracking-widest pb-10">
+         Copyright © 2025 THV rCoinmaster Version 1.0.0
+      </p>
     </div>
   );
 };

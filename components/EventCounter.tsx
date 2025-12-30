@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
-import { EventType, EventSession } from '../types';
-import { ICONS } from '../constants';
+// Updated import to use .ts extension for consistency and resolve missing member error
+import { EventType, EventSession } from '../types.ts';
+import { ICONS } from '../constants.tsx';
 
 interface EventCounterProps {
   onBack: () => void;
@@ -11,7 +12,8 @@ interface EventCounterProps {
 
 const MULTIPLIERS = [1, 2, 3, 5, 10, 15, 20, 40, 80, 100];
 
-const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
+// Fixed destructuring to include isOverlay which was in interface but missing in signature
+const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }) => {
   const [counts, setCounts] = useState<Record<EventType, number>>({
     [EventType.HAMMER]: 0,
     [EventType.PIG]: 0,

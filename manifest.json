@@ -1,8 +1,8 @@
 
 {
-  "name": "『Spin』Vũ•SymCoinMaster",
-  "short_name": "Vũ Sym",
-  "description": "Hệ thống hỗ trợ Coin Master chuyên nghiệp bởi Mr Vũ",
+  "name": "『THV』Vũ•rCoinmaster",
+  "short_name": "THV Vũ",
+  "description": "Hệ thống hỗ trợ Coin Master chuyên nghiệp bởi THV Group",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -14,11 +14,6 @@
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
-    },
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/2489/2489756.png",
-      "sizes": "512x512",
-      "type": "image/png"
     }
   ]
 }

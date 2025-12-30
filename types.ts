@@ -3,12 +3,19 @@ export enum AppView {
   DASHBOARD = 'DASHBOARD',
   SPIN_LINKS = 'SPIN_LINKS',
   COIN_LINKS = 'COIN_LINKS',
-  EVENT_COUNTER = 'EVENT_COUNTER',
-  HISTORY = 'HISTORY',
-  USAGE = 'USAGE',
   CONTACT = 'CONTACT'
 }
 
+export interface SpinLink {
+  id: string;
+  title: string;
+  amount: string;
+  url: string;
+  timestamp: string;
+  isNew?: boolean;
+}
+
+// Added EventType enum to define game event categories
 export enum EventType {
   HAMMER = 'HAMMER',
   PIG = 'PIG',
@@ -16,13 +23,7 @@ export enum EventType {
   SHIELD = 'SHIELD'
 }
 
-export interface SpinLink {
-  id: number;
-  title: string;
-  url: string;
-  date: string;
-}
-
+// Added EventSession interface for tracking and saving game statistics
 export interface EventSession {
   id: string;
   date: string;
