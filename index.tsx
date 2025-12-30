@@ -9,12 +9,15 @@ console.log("🚀 System Starting...");
 window.addEventListener('error', (event) => {
   console.error("Critical Error:", event.error);
   const root = document.getElementById('root');
+  const loadingScreen = document.getElementById('loading-screen');
+  if (loadingScreen) loadingScreen.style.display = 'none';
+  
   if (root && root.innerHTML === '') {
     root.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; padding:20px; text-align:center;">
         <div style="background:#fee2e2; border:1px solid #ef4444; padding:20px; border-radius:20px; max-width:400px;">
           <h2 style="color:#b91c1c; margin-top:0;">Lỗi Khởi Động</h2>
-          <p style="color:#7f1d1d; font-size:14px;">Hệ thống gặp sự cố khi tải dữ liệu. Vui lòng bấm nút bên dưới.</p>
+          <p style="color:#7f1d1d; font-size:14px;">Hệ thống gặp sự cố khi tải dữ liệu từ GitHub. Vui lòng bấm nút bên dưới.</p>
           <button onclick="location.reload()" style="background:#2563eb; color:white; border:none; padding:12px 24px; border-radius:12px; font-weight:bold; cursor:pointer; margin-top:10px;">TẢI LẠI TRANG</button>
         </div>
       </div>
@@ -31,6 +34,16 @@ if (rootElement) {
         <App />
       </React.StrictMode>
     );
+    
+    // Ẩn màn hình loading sau khi render thành công
+    setTimeout(() => {
+      const loadingScreen = document.getElementById('loading-screen');
+      if (loadingScreen) {
+        loadingScreen.style.opacity = '0';
+        setTimeout(() => loadingScreen.style.display = 'none', 500);
+      }
+    }, 1000);
+    
     console.log("✅ App Rendered Successfully");
   } catch (err) {
     console.error("Render failed:", err);
