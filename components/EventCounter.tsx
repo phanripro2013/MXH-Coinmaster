@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-// Updated import to use .ts extension for consistency and resolve missing member error
 import { EventType, EventSession } from '../types.ts';
 import { ICONS } from '../constants.tsx';
 
@@ -12,7 +11,6 @@ interface EventCounterProps {
 
 const MULTIPLIERS = [1, 2, 3, 5, 10, 15, 20, 40, 80, 100];
 
-// Fixed destructuring to include isOverlay which was in interface but missing in signature
 const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }) => {
   const [counts, setCounts] = useState<Record<EventType, number>>({
     [EventType.HAMMER]: 0,
@@ -39,21 +37,23 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave, isOverlay }
 
   const openGame = () => {
     const coinMasterScheme = "fb1614741348821033://";
+    
+    // Giao tiếp với Kodular
+    // Fix: Access AppInventor via window casting to avoid TypeScript property check for injected objects
+    const appInventor = (window as any).AppInventor;
+    if (appInventor) {
+       appInventor.setWebViewString(JSON.stringify({
+         action: 'OPEN_GAME',
+         scheme: coinMasterScheme
+       }));
+    }
+
     const playStoreLink = "https://play.google.com/store/apps/details?id=com.moonactive.coinmaster";
+    window.location.href = coinMasterScheme;
     
-    // Gửi lệnh đặc biệt cho Kodular xử lý
-    // Cấu trúc: intent://[action]?[data]
-    window.location.href = `intent://open-game?scheme=${encodeURIComponent(coinMasterScheme)}&package=com.moonactive.coinmaster&store=${encodeURIComponent(playStoreLink)}`;
-    
-    // Fallback cho trình duyệt thông thường
     setTimeout(() => {
-        window.location.href = coinMasterScheme;
-        setTimeout(() => {
-            if (document.hasFocus()) {
-                window.location.href = playStoreLink;
-            }
-        }, 1500);
-    }, 100);
+        window.location.href = playStoreLink;
+    }, 1000);
   };
 
   const total = history.length;

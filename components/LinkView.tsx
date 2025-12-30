@@ -49,13 +49,23 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
     setClaimedLinks(newClaimed);
     localStorage.setItem('thv_claimed_v1', JSON.stringify(newClaimed));
     
+    // Giao tiếp với Kodular qua WebViewString
+    // Fix: Cast window to any to access the AppInventor property injected by the Kodular/App Inventor environment
+    const appInventor = (window as any).AppInventor;
+    if (appInventor) {
+       appInventor.setWebViewString(JSON.stringify({
+         action: 'CLAIM_REWARD',
+         url: url
+       }));
+    }
+
     const playStoreUrl = "https://play.google.com/store/apps/details?id=com.moonactive.coinmaster";
     const intentUrl = `intent://claim-reward?url=${encodeURIComponent(url)}&package=com.moonactive.coinmaster&store=${encodeURIComponent(playStoreUrl)}&brand=THV`;
     window.location.href = intentUrl;
 
     setTimeout(() => {
         window.open(url, '_blank');
-    }, 200);
+    }, 300);
   };
 
   return (
