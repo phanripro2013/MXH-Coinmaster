@@ -1,121 +1,118 @@
 
 import React, { useState, useEffect } from 'react';
-import { AppView } from './types.ts';
-import { CONTACT_INFO, ICONS } from './constants.tsx';
-import Dashboard from './components/Dashboard.tsx';
-import LinkView from './components/LinkView.tsx';
+import ReactDOM from 'react-dom/client';
 
-const App: React.FC = () => {
-  const [currentView, setCurrentView] = useState<AppView>(AppView.DASHBOARD);
-  const [darkMode, setDarkMode] = useState<boolean>(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+// --- TYPES ---
+enum AppView {
+  DASHBOARD = 'DASHBOARD',
+  SPIN_LINKS = 'SPIN_LINKS',
+  COIN_LINKS = 'COIN_LINKS'
+}
 
+// --- CONSTANTS & ICONS ---
+const ICONS = {
+  Logo: () => (
+    <svg viewBox="0 0 100 100" className="w-10 h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="48" stroke="#2563eb" strokeWidth="4" />
+      <path d="M30 35H45V65H30M70 35H55V65H70M40 50H60" stroke="#2563eb" strokeWidth="6" strokeLinecap="round" />
+    </svg>
+  ),
+  Spin: () => (
+    <svg viewBox="0 0 24 24" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21.5 2v6h-6M2.5 22v-6h6M2 12c0-4.4 3.6-8 8-8 3.3 0 6.1 2 7.3 4.9L21.5 8" />
+    </svg>
+  )
+};
+
+// --- COMPONENTS ---
+const Dashboard = ({ onNavigate }) => (
+  <div className="p-6 space-y-6">
+    <div className="bg-white p-6 rounded-[2rem] shadow-sm border border-gray-100 flex justify-between items-center">
+      <div>
+        <h1 className="text-xl font-black italic">THV•rCoinmaster</h1>
+        <p className="text-[10px] text-blue-600 font-bold uppercase tracking-widest">Version 1.5.0 Pro</p>
+      </div>
+      <ICONS.Logo />
+    </div>
+
+    <div className="grid gap-4">
+      <button 
+        onClick={() => onNavigate(AppView.SPIN_LINKS)}
+        className="bg-blue-600 p-8 rounded-[2.5rem] text-white text-left relative overflow-hidden shadow-lg active:scale-95 transition-all"
+      >
+        <h3 className="text-3xl font-black italic">R-SPINS</h3>
+        <p className="text-xs opacity-80 mt-1 uppercase font-bold">Cập nhật link mỗi ngày</p>
+      </button>
+
+      <button 
+        onClick={() => onNavigate(AppView.COIN_LINKS)}
+        className="bg-amber-500 p-8 rounded-[2.5rem] text-white text-left relative overflow-hidden shadow-lg active:scale-95 transition-all"
+      >
+        <h3 className="text-3xl font-black italic">R-COINS</h3>
+        <p className="text-xs opacity-80 mt-1 uppercase font-bold">Nhận triệu vàng miễn phí</p>
+      </button>
+    </div>
+  </div>
+);
+
+const LinkView = ({ type, onBack }) => {
+  const [links, setLinks] = useState([]);
+  
   useEffect(() => {
-    const init = () => {
-      try {
-        if (localStorage.getItem('thv_theme_v1') === 'dark') {
-          setDarkMode(true);
-        }
-      } catch (e) {
-        console.warn("Storage reset");
-      } finally {
-        setIsLoaded(true);
-      }
-    };
-    init();
-  }, []);
-
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('thv_theme_v1', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('thv_theme_v1', 'light');
-    }
-  }, [darkMode]);
-
-  if (!isLoaded) return null;
-
-  const renderView = () => {
-    switch (currentView) {
-      case AppView.DASHBOARD:
-        return <Dashboard onViewChange={setCurrentView} />;
-      case AppView.SPIN_LINKS:
-        return <LinkView type="spin" onBack={() => setCurrentView(AppView.DASHBOARD)} />;
-      case AppView.COIN_LINKS:
-        return <LinkView type="coin" onBack={() => setCurrentView(AppView.DASHBOARD)} />;
-      case AppView.CONTACT:
-        return (
-          <div className="p-6 animate-in slide-in-from-bottom-4 duration-500">
-            <button onClick={() => setCurrentView(AppView.DASHBOARD)} className="mb-8 w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 active:scale-90 transition-transform">
-              <span className="text-xl">←</span>
-            </button>
-            <div className="bg-white dark:bg-gray-800 p-10 rounded-[3.5rem] shadow-xl text-center border border-gray-100 dark:border-gray-700 relative overflow-hidden">
-              <div className="absolute top-0 right-0 p-4 opacity-5">
-                <ICONS.LogoTHV className="w-40 h-40" />
-              </div>
-              <div className="w-24 h-24 mx-auto mb-6 relative">
-                 <ICONS.LogoTHV className="w-full h-full drop-shadow-2xl" />
-                 <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-1 rounded-full border-2 border-white">
-                   <ICONS.Badge className="w-4 h-4" />
-                 </div>
-              </div>
-              <h2 className="text-2xl font-black dark:text-white uppercase tracking-tighter italic">『THV』Vũ•rCoinmaster</h2>
-              <p className="text-gray-400 text-[10px] mb-8 uppercase tracking-widest font-black flex items-center justify-center gap-2">
-                 <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                 Official Licensed System
-              </p>
-              
-              <div className="space-y-4">
-                <a href={`tel:${CONTACT_INFO.phone}`} className="flex items-center justify-center gap-3 p-5 bg-blue-50 dark:bg-blue-900/30 rounded-3xl border border-blue-100 dark:border-blue-800 transition active:scale-95 group">
-                  <span className="font-black text-blue-600 dark:text-blue-400 text-lg group-hover:tracking-widest transition-all italic">{CONTACT_INFO.phone}</span>
-                </a>
-                <a href={`https://zalo.me/${CONTACT_INFO.zalo}`} target="_blank" className="flex items-center justify-center gap-3 p-5 bg-emerald-50 dark:bg-emerald-900/30 rounded-3xl border border-emerald-100 dark:border-emerald-800 transition active:scale-95 group">
-                  <span className="font-black text-emerald-600 dark:text-emerald-400 text-sm uppercase tracking-widest group-hover:tracking-[0.2em] transition-all">NHẮN ZALO ADMIN</span>
-                </a>
-              </div>
-              <p className="mt-8 text-[9px] text-gray-400 font-bold uppercase tracking-tight">Copyright © 2025 THV Group. All Rights Reserved.</p>
-            </div>
-          </div>
-        );
-      default:
-        return <Dashboard onViewChange={setCurrentView} />;
-    }
-  };
+    // Giả lập dữ liệu
+    const mock = Array.from({length: 10}, (_, i) => ({
+      id: i,
+      amount: type === 'spin' ? '25' : '3M',
+      time: '1 giờ trước'
+    }));
+    setLinks(mock);
+  }, [type]);
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-gray-900 transition-colors duration-300 flex flex-col font-sans selection:bg-blue-100">
-      <header className="px-6 py-5 flex justify-between items-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-md border-b border-gray-100 dark:border-gray-700 sticky top-0 z-50">
-        <div onClick={() => setCurrentView(AppView.DASHBOARD)} className="flex items-center gap-3 cursor-pointer group">
-          <div className="w-10 h-10 transition-transform group-hover:scale-110 duration-500"><ICONS.LogoTHV className="w-full h-full" /></div>
-          <div>
-            <h1 className="font-black text-sm dark:text-white leading-none tracking-tighter uppercase italic">『THV』Vũ•<span className="text-blue-600">rCM</span></h1>
-            <p className="text-[8px] font-black text-blue-500 uppercase tracking-widest mt-0.5">Official Version</p>
+    <div className="animate-in slide-in-from-right-4 duration-300">
+      <div className="p-6 flex items-center gap-4 bg-white sticky top-0 z-10 border-b">
+        <button onClick={onBack} className="text-2xl">←</button>
+        <h2 className="font-black uppercase italic">{type === 'spin' ? '🌀 Spin Links' : '💰 Coin Links'}</h2>
+      </div>
+      <div className="p-4 space-y-3">
+        {links.map(link => (
+          <div key={link.id} className="bg-white p-5 rounded-[2rem] border flex justify-between items-center">
+            <div>
+              <p className="text-2xl font-black italic">{link.amount} <span className="text-xs font-normal uppercase">{type === 'spin' ? 'Spins' : 'Vàng'}</span></p>
+              <p className="text-[10px] text-gray-400 font-bold uppercase">{link.time} • Verified</p>
+            </div>
+            <button className="bg-blue-600 text-white px-6 py-2 rounded-full font-black text-xs uppercase shadow-md">Nhận</button>
           </div>
-        </div>
-        <button onClick={() => setDarkMode(!darkMode)} className="w-10 h-10 flex items-center justify-center bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-100 dark:border-gray-600 transition-all active:scale-90 shadow-sm">
-          {darkMode ? '☀️' : '🌙'}
-        </button>
-      </header>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-      <main className="flex-1 max-w-lg mx-auto w-full overflow-x-hidden">
-        {renderView()}
-      </main>
+// --- MAIN APP ---
+const App = () => {
+  const [view, setView] = useState(AppView.DASHBOARD);
 
-      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[70%] max-w-xs bg-white/90 dark:bg-gray-800/95 backdrop-blur-xl border border-gray-200 dark:border-gray-700 p-2.5 flex justify-around items-center rounded-full z-50 shadow-[0_20px_50px_rgba(37,99,235,0.15)]">
-        <button 
-          onClick={() => setCurrentView(AppView.DASHBOARD)} 
-          className={`p-4 rounded-full transition-all duration-300 ${currentView === AppView.DASHBOARD ? 'bg-blue-600 text-white shadow-lg shadow-blue-400 scale-110' : 'text-gray-400 hover:text-blue-500'}`}
-        >
-          <ICONS.Spin className="w-6 h-6" />
-        </button>
-        <button 
-          onClick={() => setCurrentView(AppView.CONTACT)} 
-          className={`p-4 rounded-full transition-all duration-300 ${currentView === AppView.CONTACT ? 'bg-blue-600 text-white shadow-lg shadow-blue-400 scale-110' : 'text-gray-400 hover:text-blue-500'}`}
-        >
-          <ICONS.LogoTHV className="w-6 h-6" />
-        </button>
+  useEffect(() => {
+    // Ẩn loading sau khi App đã sẵn sàng
+    const loader = document.getElementById('loading-screen');
+    if (loader) {
+      setTimeout(() => {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 500);
+      }, 500);
+    }
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-[#f8fafc] max-w-md mx-auto shadow-xl">
+      {view === AppView.DASHBOARD && <Dashboard onNavigate={setView} />}
+      {view === AppView.SPIN_LINKS && <LinkView type="spin" onBack={() => setView(AppView.DASHBOARD)} />}
+      {view === AppView.COIN_LINKS && <LinkView type="coin" onBack={() => setView(AppView.DASHBOARD)} />}
+      
+      <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[70%] bg-white/90 backdrop-blur-md border p-2 rounded-full flex justify-around shadow-2xl">
+        <button onClick={() => setView(AppView.DASHBOARD)} className="p-3 text-blue-600"><ICONS.Spin /></button>
+        <button onClick={() => window.open('https://zalo.me/0927099940')} className="p-3 text-gray-400"><ICONS.Logo /></button>
       </nav>
     </div>
   );

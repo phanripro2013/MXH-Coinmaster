@@ -5,60 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#2563eb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>『THV』Vũ•rCoinmaster</title>
     
-    <!-- Tailwind & Babel -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; }
         #loading-screen {
-            position: fixed; inset: 0; background: #ffffff;
+            position: fixed; inset: 0; background: white;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 9999;
         }
-        .loader-logo { width: 90px; height: 90px; margin-bottom: 24px; animation: pulse 2s infinite ease-in-out; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.1); opacity: 0.8; } }
-        
-        #error-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
-            color: #ff4444; padding: 30px; z-index: 10000; overflow: auto; font-family: monospace;
+        .loader-spin {
+            width: 40px; height: 40px; border: 3px solid #f3f3f3;
+            border-top: 3px solid #2563eb; border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
-        .error-card { background: #1a1a1a; border: 1px solid #333; padding: 20px; border-radius: 12px; }
-        
-        .progress-container { width: 140px; height: 4px; background: #f1f5f9; border-radius: 10px; overflow: hidden; }
-        .progress-bar { width: 100%; height: 100%; background: #2563eb; transform: translateX(-100%); animation: loading 2s infinite ease-in-out; }
-        @keyframes loading { 0% { transform: translateX(-100%); } 50% { transform: translateX(0); } 100% { transform: translateX(100%); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #error-display {
+            display: none; position: fixed; inset: 0; background: #ffeeee;
+            color: #d32f2f; padding: 20px; z-index: 10000; overflow: auto; font-family: monospace;
+        }
     </style>
-
-    <script>
-        // Polyfill cho React và môi trường
-        window.process = { env: { NODE_ENV: 'production' } };
-        
-        // Trình bắt lỗi cấp cao nhất
-        window.onerror = function(msg, url, line, col, error) {
-            const overlay = document.getElementById('error-overlay');
-            if (overlay) {
-                overlay.style.display = 'block';
-                overlay.innerHTML = `
-                    <div class="error-card">
-                        <h2 style="color: white; margin-bottom: 10px;">❌ LỖI KHỞI CHẠY</h2>
-                        <p style="color: #ff6b6b;">${msg}</p>
-                        <div style="font-size: 12px; color: #888; margin-top: 15px;">
-                            File: ${url.split('/').pop()}<br>
-                            Dòng: ${line} | Cột: ${col}
-                        </div>
-                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #2563eb; color: white; border: none; border-radius: 8px; font-weight: bold;">TẢI LẠI TRANG</button>
-                    </div>
-                `;
-            }
-            return false;
-        };
-    </script>
 
     <script type="importmap">
 {
@@ -67,60 +37,92 @@
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "recharts": "https://esm.sh/recharts@2.15.0?external=react,react-dom",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "react/": "https://esm.sh/react@^19.2.3/"
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
   }
 }
 </script>
 </head>
 <body>
-    <!-- Màn hình chờ chuyên nghiệp -->
     <div id="loading-screen">
-        <svg class="loader-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="48" stroke="#2563eb" stroke-width="4" />
-            <path d="M30 35H45V65H30M70 35H55V65H70M40 50H60" stroke="#2563eb" stroke-width="6" stroke-linecap="round" />
-        </svg>
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-        </div>
-        <div style="margin-top: 15px; font-size: 10px; font-weight: 900; color: #2563eb; letter-spacing: 2px; text-transform: uppercase;">
-            THV SYSTEM BOOTING...
-        </div>
+        <div class="loader-spin"></div>
+        <p style="margin-top: 20px; font-weight: 800; color: #2563eb; font-size: 12px; letter-spacing: 1px;">THV SYSTEM BOOTING...</p>
+        <p id="loading-status" style="margin-top: 10px; font-size: 10px; color: #94a3b8;">Đang tải dữ liệu...</p>
     </div>
 
-    <div id="error-overlay"></div>
+    <div id="error-display"></div>
     <div id="root"></div>
 
-    <!-- Sử dụng Babel để xử lý logic entry point -->
-    <script type="text/babel" data-presets="react,typescript" data-type="module">
-        import React from 'react';
-        import ReactDOM from 'react-dom/client';
-        import App from './App.tsx';
+    <script type="text/babel" data-presets="react,typescript">
+        // Bộ nạp file từ xa và biên dịch tại chỗ
+        const loadFile = async (url) => {
+            const status = document.getElementById('loading-status');
+            if(status) status.innerText = `Đang nạp: ${url}...`;
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`Không thể tải file: ${url}`);
+            return await resp.text();
+        };
 
-        // Khởi tạo React App
-        try {
-            const root = ReactDOM.createRoot(document.getElementById('root'));
-            root.render(<App />);
+        const run = async () => {
+            try {
+                // Chúng ta nạp tất cả các module cần thiết
+                // Lưu ý: Tên file trên GitHub phải khớp 100%
+                const [react, reactDom, appCode] = await Promise.all([
+                    import('react'),
+                    import('react-dom/client'),
+                    loadFile('./App.tsx')
+                ]);
 
-            // Kiểm tra xem App đã render ra DOM chưa để ẩn loading
-            const checkRender = setInterval(() => {
-                const rootDiv = document.getElementById('root');
-                if (rootDiv && rootDiv.children.length > 0) {
-                    const loader = document.getElementById('loading-screen');
-                    if (loader) {
-                        loader.style.opacity = '0';
-                        setTimeout(() => loader.style.display = 'none', 600);
-                    }
-                    clearInterval(checkRender);
-                }
-            }, 100);
+                const React = react.default;
+                const ReactDOM = reactDom.default;
 
-            // Timeout an toàn 10s
-            setTimeout(() => clearInterval(checkRender), 10000);
-            
-        } catch (e) {
-            console.error("Mounting Error:", e);
-        }
+                // Biên dịch App.tsx sang JS chuẩn
+                const transformed = Babel.transform(appCode, {
+                    presets: ['react', 'typescript'],
+                    filename: 'App.tsx'
+                }).code;
+
+                // Tạo một module ảo để chạy App
+                const script = document.createElement('script');
+                script.type = 'module';
+                script.text = `
+                    import React from 'react';
+                    import ReactDOM from 'react-dom/client';
+                    ${transformed.replace(/import .* from '\.\/.*';/g, '')} // Xóa các import nội bộ vì ta sẽ gộp lại
+                    
+                    // Ghi đè các component con để test nhanh (hoặc bạn có thể load tương tự)
+                    const AppContainer = App;
+                    const root = ReactDOM.createRoot(document.getElementById('root'));
+                    root.render(<AppContainer />);
+                    
+                    setTimeout(() => {
+                        const loader = document.getElementById('loading-screen');
+                        if(loader) loader.style.opacity = '0';
+                        setTimeout(() => { if(loader) loader.style.display = 'none'; }, 500);
+                    }, 1000);
+                `;
+                // Vì cơ chế bundle phức tạp trên trình duyệt, để đơn giản và chạy ngay 100%:
+                // Tôi khuyên bạn nên gộp code vào 1 file App.tsx duy nhất.
+                
+                // Ở đây ta dùng cách đơn giản nhất: Ép nạp thẳng App.tsx
+                const root = ReactDOM.createRoot(document.getElementById('root'));
+                
+                // Để chạy được đa file, ta cần một loader thực thụ. 
+                // Tuy nhiên, để bạn có kết quả ngay lập tức, tôi sẽ cung cấp App.tsx đã gộp các thành phần quan trọng.
+                window.location.href = window.location.href; // Reset nếu lỗi
+            } catch (err) {
+                console.error(err);
+                const errDiv = document.getElementById('error-display');
+                errDiv.style.display = 'block';
+                errDiv.innerHTML = `<h3>❌ LỖI HỆ THỐNG</h3><p>${err.message}</p><small>Vui lòng kiểm tra lại tên file trên GitHub.</small>`;
+            }
+        };
+
+        // Chạy ứng dụng
+        // Lưu ý: Cách tốt nhất là dùng link script có sẵn Babel đã xử lý
     </script>
+    
+    <!-- Cách fix trang trắng tốt nhất: Đổi script thành module và dùng Babel transform trực tiếp -->
+    <script type="text/babel" src="./App.tsx" data-presets="react,typescript" data-type="module"></script>
 </body>
 </html>
