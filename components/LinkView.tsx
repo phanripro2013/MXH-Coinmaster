@@ -20,7 +20,7 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
 
   const fetchLinks = async () => {
     setLoading(true);
-    // Giả lập dữ liệu quà tặng
+    // Giả lập dữ liệu quà tặng - Trong thực tế sẽ gọi API PHP
     const mockLinks: SpinLink[] = Array.from({ length: 15 }, (_, i) => {
       const amount = type === 'spin' ? (i % 3 === 0 ? '50' : '25') : (i + 1) * 2;
       return {
@@ -44,11 +44,15 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
     setClaimedLinks(newClaimed);
     localStorage.setItem('claimed_links_v2', JSON.stringify(newClaimed));
     
-    /**
-     * DÀNH CHO KODULAR:
-     * Gửi tín hiệu nhận quà qua link ảo.
-     */
-    window.location.href = `https://kodular.bridge/claim?url=${encodeURIComponent(url)}`;
+    // Tạo link Intent chuyên dụng cho Kodular
+    // Nếu Kodular thấy link này, nó sẽ mở thẳng Game hoặc CH Play
+    const intentUrl = `intent://claim-reward?url=${encodeURIComponent(url)}&package=com.moonactive.coinmaster`;
+    window.location.href = intentUrl;
+
+    // Fallback cho trình duyệt
+    setTimeout(() => {
+        window.open(url, '_blank');
+    }, 100);
   };
 
   return (
@@ -63,6 +67,12 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
           </h2>
           <p className="text-[10px] font-black text-blue-600 dark:text-blue-400 uppercase tracking-widest">Đã cập nhật link</p>
         </div>
+      </div>
+
+      <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800">
+        <p className="text-[11px] font-bold text-blue-700 dark:text-blue-300 flex items-center gap-2">
+          <span>ℹ️</span> Đảm bảo bạn đã đăng nhập Facebook trong App này trước khi nhận quà.
+        </p>
       </div>
 
       {loading ? (
@@ -88,7 +98,7 @@ const LinkView: React.FC<LinkViewProps> = ({ type, onBack }) => {
                     onClick={() => handleClaim(link.id, link.url)}
                     className={`px-5 py-2.5 rounded-2xl font-black text-[11px] text-white uppercase shadow-md active:scale-90 transition-all ${isClaimed ? 'bg-gray-400' : type === 'spin' ? 'bg-blue-600' : 'bg-yellow-500'}`}
                   >
-                    {isClaimed ? 'Xong' : 'Lấy'}
+                    {isClaimed ? 'Xong' : 'Lấy Quà'}
                   </button>
                 </div>
               </div>

@@ -36,12 +36,22 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
   };
 
   const openGame = () => {
-    /**
-     * DÀNH CHO BẠN (KODULAR):
-     * Khi nhấn nút này, trình duyệt trong APK sẽ chạy tới link ảo bên dưới.
-     * Trong Kodular, bạn chỉ cần kiểm tra: "Nếu URL chứa chữ 'mo-game' thì mở Coin Master".
-     */
-    window.location.href = "https://kodular.bridge/mo-game";
+    const coinMasterScheme = "fb1614741348821033://";
+    const playStoreLink = "https://play.google.com/store/apps/details?id=com.moonactive.coinmaster";
+    
+    // Gửi lệnh đặc biệt cho Kodular xử lý
+    // Cấu trúc: intent://[action]?[data]
+    window.location.href = `intent://open-game?scheme=${encodeURIComponent(coinMasterScheme)}&package=com.moonactive.coinmaster&store=${encodeURIComponent(playStoreLink)}`;
+    
+    // Fallback cho trình duyệt thông thường
+    setTimeout(() => {
+        window.location.href = coinMasterScheme;
+        setTimeout(() => {
+            if (document.hasFocus()) {
+                window.location.href = playStoreLink;
+            }
+        }, 1500);
+    }, 100);
   };
 
   const total = history.length;
@@ -62,7 +72,7 @@ const EventCounter: React.FC<EventCounterProps> = ({ onBack, onSave }) => {
           className="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-2xl font-black text-xs flex items-center gap-2 shadow-xl shadow-blue-900/20 active:scale-95 transition-all"
         >
           <ICONS.Spin className="w-4 h-4 animate-spin" />
-          MỞ GAME COIN MASTER
+          MỞ GAME NGAY
         </button>
       </div>
 

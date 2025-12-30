@@ -13,8 +13,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
     { id: AppView.COIN_LINKS, label: 'Coin Links', icon: <ICONS.Coin className="w-8 h-8" />, color: 'bg-yellow-500', desc: 'Auto Update' },
     { id: AppView.EVENT_COUNTER, label: 'Bộ đếm Sym', icon: <ICONS.Event className="w-8 h-8" />, color: 'bg-purple-600', desc: 'Tool Chuyên Nghiệp' },
     { id: AppView.HISTORY, label: 'Thống kê quay', icon: <ICONS.History className="w-8 h-8" />, color: 'bg-orange-500', desc: 'Saved Sessions' },
-    { id: AppView.CONTACT, label: 'Zalo Admin', icon: <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>, color: 'bg-emerald-500', desc: 'Support 24/7' },
   ];
+
+  const handleFBLogin = () => {
+    window.location.href = "https://m.facebook.com/login";
+  };
 
   return (
     <div className="p-6 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -29,40 +32,49 @@ const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
             <span className="text-xs font-black uppercase tracking-widest text-blue-100">Hệ thống đang hoạt động</span>
           </div>
           <h2 className="text-3xl font-black mb-1 leading-tight tracking-tighter">VŨ•SYMCOINMASTER</h2>
-          <p className="text-blue-100/80 font-medium text-sm">Tự động cập nhật link từ Game mỗi 30 phút.</p>
+          <p className="text-blue-100/80 font-medium text-sm">Tự động cập nhật link quà tặng.</p>
         </div>
         
-        {/* Decorative elements */}
-        <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
         <div className="absolute top-0 right-0 p-6 opacity-20">
           <ICONS.Event className="w-24 h-24 rotate-12" />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {/* Facebook Auto Login Bridge */}
+      <button 
+        onClick={handleFBLogin}
+        className="w-full bg-[#1877F2] p-4 rounded-2xl flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-transform"
+      >
+        <svg className="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        <span className="text-white font-black text-sm uppercase tracking-tight">Đăng nhập Facebook trước</span>
+      </button>
+
+      <div className="grid grid-cols-2 gap-4">
         {menuItems.map((item) => (
           <button
             key={item.id}
             onClick={() => onViewChange(item.id as AppView)}
-            className="group relative bg-white dark:bg-gray-800 p-6 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 text-left overflow-hidden active:scale-95"
+            className="group relative bg-white dark:bg-gray-800 p-6 rounded-[2.5rem] border border-gray-100 dark:border-gray-700 shadow-sm transition-all duration-300 text-left overflow-hidden active:scale-95"
           >
-            <div className="flex items-center gap-5 z-10 relative">
-              <div className={`w-14 h-14 ${item.color} rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:rotate-12 transition-transform duration-300`}>
+            <div className="flex flex-col gap-3 z-10 relative">
+              <div className={`w-12 h-12 ${item.color} rounded-2xl flex items-center justify-center text-white shadow-lg`}>
                 {item.icon}
               </div>
-              <div className="flex-1">
-                <h3 className="font-black text-lg text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors uppercase tracking-tight">{item.label}</h3>
-                <div className="flex items-center gap-1.5">
-                   <p className="text-xs text-gray-400 dark:text-gray-500 font-bold">{item.desc}</p>
-                   {(item.desc === 'Auto Update' || item.id === AppView.EVENT_COUNTER) && (
-                     <span className="text-[10px] bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded-md uppercase font-black">PRO</span>
-                   )}
-                </div>
+              <div>
+                <h3 className="font-black text-sm text-gray-800 dark:text-white uppercase tracking-tight leading-none mb-1">{item.label}</h3>
+                <p className="text-[9px] text-gray-400 font-bold uppercase">{item.desc}</p>
               </div>
             </div>
           </button>
         ))}
       </div>
+      
+      <button 
+        onClick={() => onViewChange(AppView.CONTACT)}
+        className="w-full bg-emerald-500 p-5 rounded-[2rem] text-white font-black flex items-center justify-center gap-2 shadow-xl shadow-emerald-200 dark:shadow-none active:scale-95 transition-transform uppercase text-sm tracking-widest"
+      >
+        <span>📞</span> Liên hệ Zalo Admin
+      </button>
     </div>
   );
 };
